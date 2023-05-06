@@ -3,6 +3,10 @@ package com.example.limonadaaula
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -13,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,7 +52,7 @@ class MainActivity : ComponentActivity() {
 fun AppLimonada(){
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = Color.White
     ) {
 
         var tela by remember { mutableStateOf(1) }
@@ -90,26 +96,55 @@ fun ConteudoApp(
     recursoImagemId: Int,
     onImagemClick:()->Unit
 ){
+    val state = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize(),
     ) {
-        Text(
-            text = stringResource(recursoTextoId),
-            fontSize = 15.sp,
-            modifier = Modifier.padding(bottom = 15.dp)
-        )
-        Image(
-            painter = painterResource(id = recursoImagemId),
-            contentDescription = null,
-            modifier = Modifier
-                .size(300.dp)
-                .border(
-                    BorderStroke(2.dp, Color.Cyan),
-                    RoundedCornerShape(5.dp)
+
+        AnimatedVisibility(
+            visibleState = state,
+            enter = slideInHorizontally (),
+            exit = slideOutHorizontally()
+
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = stringResource(recursoTextoId),
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(bottom = 15.dp)
                 )
-                .clickable(onClick = onImagemClick)
-        )
+
+                Image(
+                    painter = painterResource(id = recursoImagemId),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(300.dp)
+                        .border(
+                            BorderStroke(2.dp, Color.Cyan),
+                            RoundedCornerShape(5.dp)
+                        )
+                        .clickable(onClick = onImagemClick)
+                )
+            }
+        }
+        Button(
+            onClick = onImagemClick,
+            colors = ButtonDefaults.buttonColors(Color.LightGray),
+            shape =  RoundedCornerShape(5.dp),
+            border = BorderStroke(2.dp, Color.DarkGray),
+            elevation = ButtonDefaults.buttonElevation(4.dp)
+        ) {
+            Text(
+                text ="Próximo",
+                color = Color.DarkGray
+            )
+        }
     }
 }
