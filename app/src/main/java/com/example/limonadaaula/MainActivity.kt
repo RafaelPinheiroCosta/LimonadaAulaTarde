@@ -57,19 +57,26 @@ fun AppLimonada(){
 
         var tela by remember { mutableStateOf(1) }
 
+        var espremer by remember { mutableStateOf(1) }
+
+
         when (tela) {
             1 -> ConteudoApp(
                 R.string.limoeiro,
                 R.drawable.limoeiro
             ) {
                 tela = 2
+                espremer = (2..4).random()
             }
 
             2 -> ConteudoApp(
                 R.string.limao,
                 R.drawable.espremer_limao
             ) {
-                tela = 3
+                if(espremer>1)
+                    espremer--
+                else
+                    tela = 3
             }
 
             3 -> ConteudoApp(
